@@ -37,6 +37,8 @@ if (!app.Environment.IsDevelopment())
 //     await context.Response.WriteAsync("Hello from the short-circuiter!");
 // });
 
+// Extra Note: "Visual Studio keymap extension is added."
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
