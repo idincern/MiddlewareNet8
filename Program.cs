@@ -13,15 +13,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// //1) Run() middleware example
+#region 1) Run() method example
 // app.Run(async (context) =>
 // {
 //     // short-circuits the http request pipeline and returns the response for each request to the server
 //     await context.Response.WriteAsync("Hello from the short circuiter!");
 //     Console.WriteLine("Hello from the short circuiter!");
 // });
+#endregion
 
-// //2) Use() middleware example with Run() middleware
+#region 2) Use() method example
 // app.Use(async (context, next) =>
 // {
 //     Console.WriteLine("Hello from the Use Middleware!");
@@ -38,41 +39,55 @@ if (!app.Environment.IsDevelopment())
 // });
 
 // Extra Note: "Visual Studio keymap extension is added."
+#endregion
 
+#region 3) Map() method example
+// // Use Map middleware to route different paths to different handlers
+// app.Map("/hello", HandleHelloRequest);
+// app.Map("/goodbye", HandleGoodbyeRequest);
 
-// Use Map middleware to route different paths to different handlers
-app.Map("/hello", HandleHelloRequest);
-app.Map("/goodbye", HandleGoodbyeRequest);
+// // Define request handling methods
+// static void HandleHelloRequest(IApplicationBuilder app)
+// {
+//     app.Use(async (context, next) =>
+//     {
+//         await context.Response.WriteAsync("Hello, World!");
+//         Console.WriteLine("Hello!");
+//         await next.Invoke(); // Go to the next middleware
+//         Console.WriteLine("Continuing...");
+//     });
+// }
 
-// Define request handling methods
-static void HandleHelloRequest(IApplicationBuilder app)
+// static void HandleGoodbyeRequest(IApplicationBuilder app)
+// {
+//     app.Run(async context =>
+//     {
+//         await context.Response.WriteAsync("Goodbye, World!");
+//         Console.WriteLine("Ended.");
+//     });
+// }
+#endregion
+
+#region 4) MapWhen() method example
+// Use MapWhen middleware to conditionally handle GET requests
+app.MapWhen(context => context.Request.Method == "GET", HandleGetRequests);
+
+// Define request handling method for GET requests
+static void HandleGetRequests(IApplicationBuilder app)
 {
     app.Use(async (context, next) =>
     {
-        await context.Response.WriteAsync("Hello, World!");
-        Console.WriteLine("Hello!");
-        await next.Invoke(); // Go to the next middleware
-        Console.WriteLine("Continuing...");
+        // Custom logic for handling GET requests
+        Console.WriteLine("Handling GET requests...");
+        await next.Invoke();
     });
 }
-
-static void HandleGoodbyeRequest(IApplicationBuilder app)
-{
-    app.Run(async context =>
-    {
-        await context.Response.WriteAsync("Goodbye, World!");
-        Console.WriteLine("Ended.");
-    });
-}
-
+#endregion
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

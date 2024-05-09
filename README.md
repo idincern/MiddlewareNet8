@@ -32,19 +32,19 @@
 Empty middlewares that can be configured by developer.
 1) **Run():** It breaks the chain after itself and returns to the beginning of the pipeline. Middlewares after Run Middleware are not triggered. This is called *``short-circuit``* behaviour.
     ```cs
-    Usage:
+    //Usage:
     app.Run(async (context) => {...}); // Short-circuits the pipeline
     ```
 
 2) **Use:** Typical middleware behaviour done manually.
     ```cs
-    Usage:
+    //Usage:
     app.Use(async (context, next) => {... next.Invoke() ...}); // Triggers the next middleware
     ```
     The triggering must be done manually. Otherwise the next middleware won't be triggered. Default Middlewares like UseRouting(), UseAuthentication(), etc. has this behaviour as default.
-3) **Map():** Middleware is filtered according to the incoming requests path. This behaviour can also be achieved by using if() blocks in the Use() middlewares.
+3) **Map():** Middleware is filtered according to the incoming requests path/endpoint. This behaviour can also be achieved by using if() blocks in the Use() methods.
     ```cs
-    Usage:
+    //Usage:
     app.Map("/hello", HandleHelloRequest); // Define request handling methods
     static void HandleHelloRequest(IApplicationBuilder app)
     {
@@ -55,4 +55,19 @@ Empty middlewares that can be configured by developer.
         });
     }
     ```
-4) **MapWhen():**
+4) **MapWhen():** Advanced version of Map() method. Mapping process can be done in according to the incoming requests feature. For example: If its a GET request, middleware can be mapped according to it.
+    ```cs
+    //Usage:
+    app.MapWhen(context => context.Request.Method == "GET", HandleGetRequests);
+
+    // Define request handling method for GET requests
+    static void HandleGetRequests(IApplicationBuilder app)
+    {
+        app.Use(async (context, next) =>
+        {
+            // Custom logic for handling GET requests
+            Console.WriteLine("Handling GET requests...");
+            await next.Invoke();
+        });
+    }
+    ```

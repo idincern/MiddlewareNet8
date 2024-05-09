@@ -18,6 +18,16 @@ public class HomeController : Controller
         return View();
     }
 
+     [HttpPost]
+    public IActionResult PostData()
+    {
+        _logger.LogInformation("Received a POST request.");
+
+        // Process the POST request (e.g., perform some action)
+
+        return View(); // Return 200 OK response
+    }
+
     public IActionResult Privacy()
     {
         return View();
