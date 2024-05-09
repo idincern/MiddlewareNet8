@@ -39,6 +39,33 @@ if (!app.Environment.IsDevelopment())
 
 // Extra Note: "Visual Studio keymap extension is added."
 
+
+// Use Map middleware to route different paths to different handlers
+app.Map("/hello", HandleHelloRequest);
+app.Map("/goodbye", HandleGoodbyeRequest);
+
+// Define request handling methods
+static void HandleHelloRequest(IApplicationBuilder app)
+{
+    app.Use(async (context, next) =>
+    {
+        await context.Response.WriteAsync("Hello, World!");
+        Console.WriteLine("Hello!");
+        await next.Invoke(); // Go to the next middleware
+        Console.WriteLine("Continuing...");
+    });
+}
+
+static void HandleGoodbyeRequest(IApplicationBuilder app)
+{
+    app.Run(async context =>
+    {
+        await context.Response.WriteAsync("Goodbye, World!");
+        Console.WriteLine("Ended.");
+    });
+}
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

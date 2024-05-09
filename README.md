@@ -32,13 +32,27 @@
 Empty middlewares that can be configured by developer.
 1) **Run():** It breaks the chain after itself and returns to the beginning of the pipeline. Middlewares after Run Middleware are not triggered. This is called *``short-circuit``* behaviour.
     ```cs
-    Usage: app.Run(async (context) => {...}); // Short-circuits the pipeline
+    Usage:
+    app.Run(async (context) => {...}); // Short-circuits the pipeline
     ```
 
 2) **Use:** Typical middleware behaviour done manually.
     ```cs
-    Usage: app.Use(async (context, next) => {... next.Invoke() ...}); // Triggers the next middleware
+    Usage:
+    app.Use(async (context, next) => {... next.Invoke() ...}); // Triggers the next middleware
     ```
     The triggering must be done manually. Otherwise the next middleware won't be triggered. Default Middlewares like UseRouting(), UseAuthentication(), etc. has this behaviour as default.
-3) **Map():**
+3) **Map():** Middleware is filtered according to the incoming requests path. This behaviour can also be achieved by using if() blocks in the Use() middlewares.
+    ```cs
+    Usage:
+    app.Map("/hello", HandleHelloRequest); // Define request handling methods
+    static void HandleHelloRequest(IApplicationBuilder app)
+    {
+        app.Use(async (context, next) =>
+        {
+            await context.Response.WriteAsync("Hello mapped!");
+            await next.Invoke(); // Go to the next middleware ...
+        });
+    }
+    ```
 4) **MapWhen():**
