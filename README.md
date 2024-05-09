@@ -30,7 +30,15 @@
 
 ### ASP.NET Core Middlewares
 Empty middlewares that can be configured by developer.
-1) Run: It breaks the chain after itself and returns to the beginning of the pipeline. Middlewares after Run Middleware are not triggered. This is called *``short-circuit``* behaviour.
-- Use
-- Map
-- MapWhen
+1) **Run():** It breaks the chain after itself and returns to the beginning of the pipeline. Middlewares after Run Middleware are not triggered. This is called *``short-circuit``* behaviour.
+    ```cs
+    Usage: app.Run(async (context) => {...}); // Short-circuits the pipeline
+    ```
+
+2) **Use:** Typical middleware behaviour done manually.
+    ```cs
+    Usage: app.Use(async (context, next) => {... next.Invoke() ...}); // Triggers the next middleware
+    ```
+    The triggering must be done manually. Otherwise the next middleware won't be triggered. Default Middlewares like UseRouting(), UseAuthentication(), etc. has this behaviour as default.
+3) **Map():**
+4) **MapWhen():**

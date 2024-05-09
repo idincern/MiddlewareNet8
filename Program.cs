@@ -22,20 +22,20 @@ if (!app.Environment.IsDevelopment())
 // });
 
 // //2) Use() middleware example with Run() middleware
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("Hello from the Use Middleware!");
+// app.Use(async (context, next) =>
+// {
+//     Console.WriteLine("Hello from the Use Middleware!");
 
-    // Do work that can write to the Response.
-    await next.Invoke(); // Go to the next middleware
-    // Do logging or other work that doesn't write to the Response.
-    Console.WriteLine("Bye bye from the Use Middleware!");
-});
-app.Run(async context =>
-{
-    Console.WriteLine("Hello from the short-circuiter!");
-    await context.Response.WriteAsync("Hello from the short-circuiter!");
-});
+//     // Do work that can write to the Response.
+//     await next.Invoke(); // Go to the next middleware
+//     // Do logging or other work that doesn't write to the Response.
+//     Console.WriteLine("Bye bye from the Use Middleware!");
+// });
+// app.Run(async context =>
+// {
+//     Console.WriteLine("Hello from the short-circuiter!");
+//     await context.Response.WriteAsync("Hello from the short-circuiter!");
+// });
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
