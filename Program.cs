@@ -13,6 +13,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Run middleware example
+app.Run(async (context) =>
+{
+    // Short-circuits the HTTP request pipeline and returns the response
+    await context.Response.WriteAsync("Hello from the short circuiter!");
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
